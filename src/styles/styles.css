@@ -88,3 +88,13 @@ p {
 .between-range {
 	display: block !important;
 }
+
+.result :hover {
+	background-color: #ededed !important;
+}
+
+.modal-header {
+	display: flex !important;
+	margin: 0 !important;
+	height: 60px !important;
+}

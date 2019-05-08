@@ -1,7 +1,7 @@
 import React from 'react';
-import { Grid, Form, Icon, Input, Button, Checkbox, Dropdown } from 'semantic-ui-react'
+import { Grid, Icon, Input, Button, Dropdown, Segment, Modal, Header } from 'semantic-ui-react'
 import { RangeSelections, ViewSelections } from '../constants/AppConstants';
-import AppActions from '../actions/AppActions';
+import CreateForm from './CreateForm';
 class SearchForm extends React.Component {
 	constructor(props) {
 		super(props);
@@ -18,17 +18,17 @@ class SearchForm extends React.Component {
 		if (range === 'between') {
 			inputs = (
 				<div className='between-range'>
-					<Input 
-						className='range-input' 
-						placeholder='YYYY-MM-DD' 
-						value={firstDate} 
+					<Input
+						className='range-input'
+						placeholder='YYYY-MM-DD'
+						value={firstDate}
 						onChange={this.handleFirstDateChange}
 					/>
 					-
-					<Input 
-						className='range-input' 
-						placeholder='YYYY-MM-DD' 
-						value={secondDate} 
+					<Input
+						className='range-input'
+						placeholder='YYYY-MM-DD'
+						value={secondDate}
 						onChange={this.handleSecondDateChange}
 					/>
 				</div>
@@ -36,10 +36,10 @@ class SearchForm extends React.Component {
 		} else if (range !== '') {
 			inputs = (
 				<div>
-				<Input 
-					className='range-input' 
-					placeholder='YYYY-MM-DD' 
-					value={firstDate} 
+				<Input
+					className='range-input'
+					placeholder='YYYY-MM-DD'
+					value={firstDate}
 					onChange={this.handleFirstDateChange}
 				/>
 				</div>
@@ -50,8 +50,8 @@ class SearchForm extends React.Component {
 				<Grid columns={3} divided>
 					<Grid.Row>
 						<Grid.Column width={7} className='other-column'>
-							<div className='view-range-container'> 
-								<b>Due:</b> 
+							<div className='view-range-container'>
+								<b>Due:</b>
 								<Dropdown
 									placeholder='Select Range'
 									fluid
@@ -66,7 +66,7 @@ class SearchForm extends React.Component {
 							</div>
 						</Grid.Column>
 						<Grid.Column width={3} className='other-column'>
-							<div className='view-dropdown-container'> 
+							<div className='view-dropdown-container'>
 								<b>View:</b>
 								<Dropdown
 									placeholder='Select Range'
@@ -80,15 +80,35 @@ class SearchForm extends React.Component {
 							</div>
 						</Grid.Column>
 						<Grid.Column width={3} className='other-column'>
-							<Button icon primary labelPosition='left' onClick={this.handleCreateClick}>
-								<Icon name='plus' />
-								Create
-							</Button>
+							<Modal
+								trigger = {
+									<Button icon primary labelPosition='left'>
+										<Icon name='plus'/>
+										Create
+									</Button>
+								}
+								header = {
+									<Segment clearing className='modal-header'>
+										<Header as='h2' textAlign='center'>
+											Create new Task
+										</Header>
+									</Segment>
+								}
+								content = {
+									<CreateForm />
+								}>
+							</Modal>
 						</Grid.Column>
 					</Grid.Row>
 				</Grid>
 				<Button primary className='search-button'> Search </Button>
 			</div>
+		);
+	}
+
+	getModalContent = () => {
+		return (
+			<div>Hello world</div>
 		);
 	}
 	handleSearch = () => {
@@ -102,22 +122,9 @@ class SearchForm extends React.Component {
 	}
 	handleViewChange = (event, data) => {
 		this.setState({view: data.value});
-		// this.setState({text:data.value});
-	}
-	handleCreateClick = (event, data) => {
-		// this.setState({range: data.value});
 	}
 	handleRangeChange = (event, data) => {
 		this.setState({range: data.value});
-		// const enteredText = data.value.trim();
-
-		// const rangeTest = /^\d+..\d+$/;
-		// const limitTest = /(^>|^<|^>=|^<=)\d+$/;
-		// const passes = rangeTest.test(enteredText) || limitTest.test(enteredText) || !isNaN(enteredText);
-		// this.setState({
-		// 	stars:data.value,
-		// 	starsError: !passes,
-		// });
 	}
 }
 
