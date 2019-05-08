@@ -1,0 +1,90 @@
+.logo {
+	width: 110px !important;
+	height: 45px !important;
+}
+
+.header, .footer {
+	height: 55px !important;
+	width: 100% !important;
+	padding: 0px !important;
+	margin: 0px !important;
+}
+
+.app {
+	width: 100% !important;
+	height: 100% !important;
+}
+
+.footer {
+	position: fixed !important;
+	bottom: 0 !important;
+}
+
+.formDiv, .resultsContainer {
+	margin-left: 200px !important;
+	margin-right: 200px !important;
+	margin-top: 20px !important;
+}
+
+.checkbox {
+	top: 50% !important;
+}
+
+.left-column{
+	text-overflow: ellipsis !important;
+}
+
+p {
+	margin-bottom: 0px !important;
+}
+
+.other-column {
+	text-align: center !important;
+}
+
+.searchResult {
+	margin-bottom: 20px !important;
+}
+
+.lowered-text, .description {
+	margin-top: 10px;
+}
+
+.description {
+	white-space: nowrap;
+	text-overflow: ellipsis;
+	overflow: hidden;
+}
+
+.label {
+	text-align: center !important;
+	margin-top: 10px !important;
+	margin-bottom: 10px !important;
+}
+
+.view-range-container, .view-dropdown-container {
+	top: 50%;
+    position: relative;
+    transform: translateY(-50%);
+    display: flex !important;
+    align-items: center !important;
+}
+
+.view-dropdown, .range-dropdown, .range-input {
+	margin-right: 5px;
+	margin-left: 5px;
+}
+
+.search-button {
+	margin: 10px auto !important;
+	display: block !important;
+}
+
+.range-input, .range-dropdown {
+	max-width: 130px !important;
+	width: 130px !important;
+}
+
+.between-range {
+	display: block !important;
+}
