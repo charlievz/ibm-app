@@ -45,7 +45,7 @@ class SearchResults extends React.Component {
 									</Grid.Column>
 									<Grid.Column width={3} className='other-column'>
 										<p><b>Completed On</b></p>
-										<p className='lowered-text'>{result.completedOn}</p>
+										<p className='lowered-text'>{result.completedOn || "Not Completed"}</p>
 									</Grid.Column>
 								</Grid.Row>
 							</Grid>
@@ -77,7 +77,7 @@ class SearchResults extends React.Component {
 	getModalContent = (result) => {
 		let completed = {key: 'completed', content: 'Completed', disabled: true};
 		let done = { key: 'done', content: 'Done', color: 'blue' };
-		if (!result.completedOn || !result.completedOn.length) {
+		if (!result.completedOn) {
 			completed.content = 'Mark as completed';
 			completed.disabled = false;
 			completed.positive = true;

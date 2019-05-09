@@ -1,4 +1,6 @@
 import { EventEmitter } from 'events';
+import _ from 'lodash';
+
 class AppStore extends EventEmitter{
 	constructor() {
 		super();
@@ -21,6 +23,16 @@ class AppStore extends EventEmitter{
 	}
 	handleResponse = response => {
 		this.state.results = response;
+		this.emitChange();
+	}
+
+	handleMarkComplete = (task, formattedEpochSeconds) => {
+		_.find(this.state.results, {id: task.id}).completedOn = formattedEpochSeconds;
+		this.emitChange();
+	}
+
+	handleTaskAdded = (taskState) => {
+		this.state.results.push(taskState);
 		this.emitChange();
 	}
 

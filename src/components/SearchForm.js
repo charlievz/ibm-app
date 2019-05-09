@@ -8,17 +8,21 @@ class SearchForm extends React.Component {
 	constructor(props) {
 		super(props);
 		this.state = {
-			range: '',
-			view: 'all',
-			firstDate: '',
-			secondDate: '',
+			search: {
+				range: '',
+				view: 'all',
+				firstDate: '',
+				secondDate: '',
+			},
+			modalOpen: false,
 		};
 	}
 	componentDidMount() {
 		appActions.handleSearch(this.state);
 	}
 	render() {
-		const {range, view, firstDate, secondDate} = this.state;
+		const { range, view, firstDate, secondDate } = this.state.search;
+		const { modalOpen } = this.state;
 		let inputs;
 		if (range === 'between') {
 			inputs = (
@@ -60,6 +64,7 @@ class SearchForm extends React.Component {
 								<Dropdown
 									placeholder='Select Range'
 									fluid
+									clearable
 									search
 									selection
 									options={RangeSelections}
@@ -87,7 +92,7 @@ class SearchForm extends React.Component {
 						<Grid.Column width={3} className='other-column'>
 							<Modal
 								trigger = {
-									<Button icon primary labelPosition='left'>
+									<Button onClick={this.handleOpen} icon primary labelPosition='left'>
 										<Icon name='plus'/>
 										Create
 									</Button>
@@ -100,13 +105,21 @@ class SearchForm extends React.Component {
 									</Segment>
 								}
 								content = {
-									<CreateForm />
-								}>
+									<CreateForm closeForm={this.handleClose} />
+								}
+								onClose={this.handleClose}
+								open={modalOpen}
+								>
 							</Modal>
 						</Grid.Column>
 					</Grid.Row>
 				</Grid>
-				<Button primary className='search-button'> Search </Button>
+				<Button
+					primary
+					className='search-button'
+					onClick={this.handleSearch}
+				> Search
+				</Button>
 			</div>
 		);
 	}
@@ -116,20 +129,42 @@ class SearchForm extends React.Component {
 			<div>Hello world</div>
 		);
 	}
+	handleOpen = () => {
+		this.setState({modalOpen: true});
+	}
+	handleClose = () => {
+		this.setState({modalOpen: false})
+	}
 	handleSearch = () => {
-		// AppActions.handleSearch(this.state);
+		appActions.handleSearch(this.state.search);
 	}
 	handleFirstDateChange = (event, data) => {
-		this.setState({firstDate: data.value});
+		this.setState({
+			search:
+			{
+				firstDate: data.value
+			}
+		});
 	}
 	handleSecondDateChange = (event, data) => {
-		this.setState({secondDate: data.value});
+		this.setState({
+			search:
+			{
+				secondDate: data.value
+			}
+		});
 	}
 	handleViewChange = (event, data) => {
+		appActions.handleSearch(Object.assign(this.state.search, {view: data.value}));
 		this.setState({view: data.value});
 	}
 	handleRangeChange = (event, data) => {
-		this.setState({range: data.value});
+		this.setState({
+			search:
+			{
+				range: data.value
+			}
+		});
 	}
 }
 

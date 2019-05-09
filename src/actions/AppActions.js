@@ -17,7 +17,7 @@ const AppActions = {
 			paramsAdded = true;
 		}
 		if (view === 'completed') {
-			url += (paramsAdded ? "&" : "") + "completed=true"; 
+			url += (paramsAdded ? "&" : "") + "completed=true";
 		}
 		fetch(url).then(response=>{
 			return response.json();
@@ -30,16 +30,33 @@ const AppActions = {
 		});
 	},
 	createTask(taskState) {
-
+		let url = `${SERVICE_URL}/task`;
+		const param = {
+			body: JSON.stringify(taskState),
+			headers: {
+				'Content-Type': 'application/json',
+			},
+			method: "POST",
+		};
+		fetch(url, param).then(response => {
+			return response.json();
+		}).then(json => {
+			if (json.status === 200) {
+				appStore.handleTaskAdded(Object.assign({}, taskState, {id: json.id}));
+			}
+		}).catch(error=> {
+			console.log(error);
+		});
 	},
 	markComplete(task) {
 		const currentEpochSeconds = (new Date()).getTime() / 1000;
-		const formattedEpochSeconds = new Date(AppUtils.toDateString(currentEpochSeconds)).getTime() / 1000;
+		const dateString = AppUtils.toDateString(currentEpochSeconds);
+		const formattedEpochSeconds = new Date(dateString).getTime() / 1000;
 
 		let url = `${SERVICE_URL}/task/${task.id}`;
 
 		const data = {
-			completed_on: formattedEpochSeconds,
+			completedOn: formattedEpochSeconds,
 		}
 		const param = {
 			body: JSON.stringify(data),
@@ -51,7 +68,9 @@ const AppActions = {
 		fetch(url, param).then(response => {
 			return response.json();
 		}).then(json => {
-			console.log(json);
+			if (json.status === 200) {
+				appStore.handleMarkComplete(task, dateString);
+			}
 		}).catch(error=> {
 			console.log(error);
 		});

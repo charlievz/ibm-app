@@ -6,13 +6,12 @@ import logo from './ibm.png';
 function App() {
   return (
     <div className="app">
-      <Menu color="black" inverted borderless className='header'> 
+      <Menu color="black" inverted borderless className='header'>
       	<Menu.Item>
       		<img alt='logo' src={logo} className='logo'/>
       	</Menu.Item>
       </Menu>
       <PageComponent/>
-      <Menu color="black" inverted borderless className='footer'/> 
     </div>
   );
 }

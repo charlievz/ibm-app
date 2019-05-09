@@ -7,25 +7,19 @@ class CreateForm extends React.Component {
     constructor(props) {
 		super(props);
 		this.state = {
-			results: [
-				{
-					name: null,
-					description: null,
-					dueDate: null,
-					completedOn: null,
-				}
-			],
+            name: '',
+            description: '',
+            dueOn: '',
 		};
     }
 
     render() {
-        const {name, description, dueDate} = this.state;
+        const {name, description, dueOn} = this.state;
         return (
             <div>
                 <Form>
                     <Form.Group widths='equal'>
                         <Form.Field
-                            id='form-input-control-first-name'
                             control={Input}
                             label='Task Name:*'
                             placeholder='Task Name'
@@ -33,16 +27,14 @@ class CreateForm extends React.Component {
                             onChange={this.handleNameChange}
                         />
                         <Form.Field
-                            id='form-input-control-last-name'
                             control={Input}
                             label='Due on:*'
                             placeholder='YYYY-MM-DD'
-                            value={dueDate}
-                            onChange={this.handleDueDateChange}
+                            value={dueOn}
+                            onChange={this.handleDueOnChange}
                         />
                     </Form.Group>
                     <Form.Field
-                        id='form-textarea-control-opinion'
                         control={TextArea}
                         label='Description:*'
                         placeholder='Description'
@@ -50,9 +42,9 @@ class CreateForm extends React.Component {
                         onChange={this.handleDescriptionChange}
                     />
                     <Form.Field
-                        id='form-button-control-public'
                         control={Button}
                         primary
+                        disabled={name.length <= 0 || dueOn.length <= 0 || description.length <= 0}
                         onClick={this.handleCreateClick}
                         content='Create'
                     />
@@ -62,12 +54,13 @@ class CreateForm extends React.Component {
     }
     handleCreateClick = () => {
         AppActions.createTask(this.state);
+        this.props.closeForm();
     }
     handleNameChange = (e, data) => {
         this.setState({name: data.value});
     }
-    handleDueDateChange = (e, data) => {
-        this.setState({dueDate: data.value});
+    handleDueOnChange = (e, data) => {
+        this.setState({dueOn: data.value});
     }
     handleDescriptionChange = (e, data) => {
         this.setState({description: data.value});

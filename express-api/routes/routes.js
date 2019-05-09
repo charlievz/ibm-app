@@ -1,5 +1,6 @@
 const pool = require('../data/config');
-const _ = require('lodash');
+const has = require('lodash/has');
+const isEmpty = require('lodash/isEmpty');
 
 const router = app => {
 	app.use(function(req, res, next) {
@@ -14,33 +15,33 @@ const router = app => {
 		});
 	});
 	app.get('/tasks', (request, response) => {
-		if (_.isEmpty(request.query)) {
+		if (isEmpty(request.query)) {
 			pool.query('SELECT * FROM tasks', (error, result) => {
 				if (error) throw error;
-				response.send(result);
+				response.status(200).send(result);
 			});
-			return; 
+			return;
 		}
-		
+
 		let query = "SELECT * FROM tasks"
 		let addedWhere = false;
 
-		if (_.has(request.query, 'firstDate')) {
-			if (!_.has(request.query, 'secondDate')) {
+		if (has(request.query, 'firstDate')) {
+			if (!has(request.query, 'secondDate')) {
 				query += " WHERE due_on = " + request.query.firstDate;
 			} else {
 				query += " WHERE due_on >= " + request.query.firstDate + " AND due_on <= " + request.query.secondDate;
 			}
 			addedWhere = true;
 		}
-		if (_.has(request.query, 'completed') && request.query.completed != 'false') {
+		if (has(request.query, 'completed') && request.query.completed != 'false') {
 			query += (addedWhere ? " AND " : " WHERE ") + "completed_on IS NOT NULL";
 		}
 		pool.query(query, (error, result) => {
 			if (error) throw error;
-			response.send(result);
+			response.status(200).send(result);
 		});
-		 
+
 	});
 	app.get('/task/:id', (request, response) => {
 		const id = request.params.id;
@@ -50,21 +51,33 @@ const router = app => {
 		});
 	});
 
-	// 
+	//
 	app.post('/task', (request, response) => {
-		pool.query('INSERT INTO tasks SET ?', request.body, (error, result) => {
-			if (error) throw error;
-			response.status(201).send(`Task added with ID: ${result.insertId}`);
-		});
+		if (has(request.body, 'name') && has(request.body, 'description') && has(request.body, 'dueOn')) {
+			const {name, description, dueOn} = request.body;
+			const epochDueOn = new Date(dueOn).getTime() / 1000;
+			let query = `INSERT INTO tasks SET name="${name}", description="${description}", due_on=${epochDueOn}`;
+			pool.query(query, (error, result) => {
+				if (error) throw error;
+				response.send({message: `Task added with ID: ${result.insertId}`, id: result.insertId, status: 200});
+			});
+			return;
+		}
+		response.send({message: `Invalid params`, status: 400});
 	});
 
 	app.put('/task/:id', (request, response) => {
 		const id = request.params.id;
-		console.log(request.body);
-		pool.query('UPDATE tasks SET ? WHERE id = ?', [request.body, id], (error, result) => {
-			if (error) throw error;
-			response.send('Task updated successfully');
-		});
+		if (has(request.body, 'completedOn')) {
+				const completedEpoch = request.body.completedOn;
+				const query = `UPDATE tasks SET completed_on = ${completedEpoch} WHERE id = ?`;
+				pool.query(query, [id], (error, _result) => {
+					if (error) throw error;
+					response.send({message: 'Task updated successfully', status: 200});
+				});
+			return;
+		}
+		response.status(400).send(`Specify completed field`);
 	});
 	app.delete('/tasks/:id', (request, response) => {
 		const id = request.params.id;
