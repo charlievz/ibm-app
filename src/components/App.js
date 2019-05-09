@@ -8,7 +8,7 @@ function App() {
     <div className="app">
       <Menu color="black" inverted borderless className='header'> 
       	<Menu.Item>
-      		<img src={logo} className='logo'/>
+      		<img alt='logo' src={logo} className='logo'/>
       	</Menu.Item>
       </Menu>
       <PageComponent/>

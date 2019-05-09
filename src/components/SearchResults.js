@@ -1,19 +1,13 @@
 import React from 'react';
 import appStore from '../stores/AppStore';
 import { Grid, Modal, Segment, Header} from 'semantic-ui-react'
+import appActions from '../actions/AppActions';
 
 class SearchResults extends React.Component {
 	constructor(props) {
 		super(props);
 		this.state = {
-			results: [
-				{
-					name: 'Test',
-					description: 'hello world hello world hello world hello world hello world hello world hello world hello world hello world',
-					dueDate: '2019-05-01',
-					completedOn: 'false',
-				}
-			],
+			results: [],
 		};
 	}
 
@@ -47,7 +41,7 @@ class SearchResults extends React.Component {
 									</Grid.Column>
 									<Grid.Column width={3} className='other-column'>
 										<p><b>Due Date</b></p>
-										<p className='lowered-text'>{result.dueDate}</p>
+										<p className='lowered-text'>{result.dueOn}</p>
 									</Grid.Column>
 									<Grid.Column width={3} className='other-column'>
 										<p><b>Completed On</b></p>
@@ -63,7 +57,7 @@ class SearchResults extends React.Component {
 								{result.name}
 							</Header>
 							<Header as='h2' floated='right' textAlign='right'>
-								Due on: {result.dueDate}
+								Due on: {result.dueOn}
 							</Header>
 						</Segment>
 					}
@@ -74,7 +68,7 @@ class SearchResults extends React.Component {
 		);
 		return (
 			<div className='resultsContainer'>
-				<p className='label'>SEARCH RESULTS:</p>
+				<p className='label'>TASKS:</p>
 				{listItems}
 			</div>
 		);
@@ -87,6 +81,9 @@ class SearchResults extends React.Component {
 			completed.content = 'Mark as completed';
 			completed.disabled = false;
 			completed.positive = true;
+			completed.onClick = () => {
+				appActions.markComplete(result);
+			}
 		}
 		return [ completed, done ];
 	}

@@ -1,7 +1,9 @@
 import React from 'react';
 import { Grid, Icon, Input, Button, Dropdown, Segment, Modal, Header } from 'semantic-ui-react'
 import { RangeSelections, ViewSelections } from '../constants/AppConstants';
+import appActions from '../actions/AppActions';
 import CreateForm from './CreateForm';
+
 class SearchForm extends React.Component {
 	constructor(props) {
 		super(props);
@@ -11,6 +13,9 @@ class SearchForm extends React.Component {
 			firstDate: '',
 			secondDate: '',
 		};
+	}
+	componentDidMount() {
+		appActions.handleSearch(this.state);
 	}
 	render() {
 		const {range, view, firstDate, secondDate} = this.state;

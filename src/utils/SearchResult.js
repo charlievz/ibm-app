@@ -1,21 +1,11 @@
-/*
-Each result should include the following data:
+import AppUtils from '../utils/AppUtils';
 
-Repo name
-Repo owner's name
-Link to the repo
-Description
-Number of stars
-License
-
-*/
 export default class SearchResult {
-	constructor(repoName, ownerName, repoLink, description, numStars, license) {
-		this.repoName = repoName;
-		this.ownerName = ownerName;
-		this.repoLink = repoLink;
+	constructor(id, name, dueOn, description, completedOn) {
+		this.id = id;
+		this.name = name;
+		this.dueOn = AppUtils.toDateString(dueOn);
 		this.description = description;
-		this.numStars = numStars;
-		this.license = license;
+		this.completedOn = AppUtils.toDateString(completedOn);
 	}
 }

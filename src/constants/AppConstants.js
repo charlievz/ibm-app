@@ -7,3 +7,5 @@ export const ViewSelections = [
     { key: 'all', value: 'all', text: 'All'},
     { key: 'completed', value: 'completed', text: 'Completed'}
 ]
+
+export const SERVICE_URL = 'http://localhost:3002';
