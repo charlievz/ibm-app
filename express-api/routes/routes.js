@@ -1,6 +1,7 @@
 const pool = require('../data/config');
 const has = require('lodash/has');
 const isEmpty = require('lodash/isEmpty');
+const mysql = require('mysql');
 
 const router = app => {
 	app.use(function(_req, res, next) {
@@ -28,9 +29,9 @@ const router = app => {
 
 		if (has(request.body, 'firstDate')) {
 			if (!has(request.body, 'secondDate')) {
-				query += " WHERE due_on = " + request.body.firstDate;
+				query += " WHERE due_on = " + mysql.escape(request.body.firstDate);
 			} else {
-				query += " WHERE due_on >= " + request.body.firstDate + " AND due_on <= " + request.body.secondDate;
+				query += " WHERE due_on >= " + mysql.escape(request.body.firstDate) + " AND due_on <= " + mysql.escape(request.body.secondDate);
 			}
 			addedWhere = true;
 		}
