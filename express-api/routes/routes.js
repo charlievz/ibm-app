@@ -57,8 +57,8 @@ const router = app => {
 		if (has(request.body, 'name') && has(request.body, 'description') && has(request.body, 'dueOn')) {
 			const {name, description, dueOn} = request.body;
 			const epochDueOn = new Date(dueOn).getTime() / 1000;
-			let query = `INSERT INTO tasks SET name="${name}", description="${description}", due_on=${epochDueOn}`;
-			pool.query(query, (error, result) => {
+			let query = `INSERT INTO tasks SET name = ?, description = ?, due_on = ?`;
+			pool.query(query, [name, description, epochDueOn], (error, result) => {
 				if (error) throw error;
 				response.send({message: `Task added with ID: ${result.insertId}`, id: result.insertId, status: 200});
 			});
@@ -71,8 +71,8 @@ const router = app => {
 		const id = request.params.id;
 		if (has(request.body, 'completedOn')) {
 				const completedEpoch = request.body.completedOn;
-				const query = `UPDATE tasks SET completed_on = ${completedEpoch} WHERE id = ?`;
-				pool.query(query, [id], (error, _result) => {
+				const query = `UPDATE tasks SET completed_on = ? WHERE id = ?`;
+				pool.query(query, [completedEpoch, id], (error, _result) => {
 					if (error) throw error;
 					response.send({message: 'Task updated successfully', status: 200});
 				});
