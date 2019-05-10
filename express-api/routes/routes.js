@@ -10,11 +10,13 @@ const router = app => {
 		res.header('Access-Control-Allow-Methods', 'PUT, POST, GET, DELETE, OPTIONS');
 		next();
 	});
+
 	app.get('/', (_request, response) => {
 		response.send({
 			message: 'Node.js and Express REST API'
 		});
 	});
+
 	app.post('/tasks', (request, response) => {
 		if (isEmpty(request.body)) {
 			pool.query('SELECT * FROM tasks', (error, result) => {
@@ -45,6 +47,7 @@ const router = app => {
 		});
 
 	});
+
 	app.get('/task/:id', (request, response) => {
 		const id = request.params.id;
 		pool.query('SELECT * FROM tasks WHERE id = ?', id, (error, result) => {
@@ -53,7 +56,6 @@ const router = app => {
 		});
 	});
 
-	//
 	app.post('/task', (request, response) => {
 		if (has(request.body, 'name') && has(request.body, 'description') && has(request.body, 'dueOn')) {
 			const {name, description, dueOn} = request.body;
@@ -81,6 +83,7 @@ const router = app => {
 		}
 		response.status(400).send(`Specify completed field`);
 	});
+
 	app.delete('/task/:id', (request, response) => {
 		const id = request.params.id;
 		pool.query('DELETE FROM tasks WHERE id = ?', id, (error, _result) => {
