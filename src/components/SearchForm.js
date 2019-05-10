@@ -2,28 +2,30 @@ import React from 'react';
 import { Grid, Icon, Input, Button, Dropdown, Segment, Modal, Header } from 'semantic-ui-react'
 import { RangeSelections, ViewSelections } from '../constants/AppConstants';
 import appActions from '../actions/AppActions';
+import AppUtils from '../utils/AppUtils';
 import CreateForm from './CreateForm';
 
 class SearchForm extends React.Component {
 	constructor(props) {
 		super(props);
 		this.state = {
-			search: {
-				range: '',
-				view: 'all',
-				firstDate: '',
-				secondDate: '',
-			},
+			range: '',
+			view: 'all',
+			firstDate: '',
+			firstDateError: false,
+			secondDate: '',
+			secondDateError: false,
 			modalOpen: false,
 		};
 	}
 	componentDidMount() {
-		appActions.handleSearch(this.state);
+		const { modalOpen, firstDateError, secondDateError, ...searchState } = this.state;
+		appActions.handleSearch(searchState);
 	}
 	render() {
-		const { range, view, firstDate, secondDate } = this.state.search;
-		const { modalOpen } = this.state;
+		const { range, view, firstDate, secondDate, modalOpen, firstDateError, secondDateError } = this.state;
 		let inputs;
+		let disableSearch;
 		if (range === 'between') {
 			inputs = (
 				<div className='between-range'>
@@ -32,6 +34,7 @@ class SearchForm extends React.Component {
 						placeholder='YYYY-MM-DD'
 						value={firstDate}
 						onChange={this.handleFirstDateChange}
+						error={firstDateError}
 					/>
 					-
 					<Input
@@ -39,20 +42,31 @@ class SearchForm extends React.Component {
 						placeholder='YYYY-MM-DD'
 						value={secondDate}
 						onChange={this.handleSecondDateChange}
+						error={secondDateError}
 					/>
 				</div>
 			);
-		} else if (range !== '') {
+			if (!firstDate.length || !secondDate.length) {
+				disableSearch = true;
+			}
+		} else if (range === 'on') {
 			inputs = (
 				<div>
-				<Input
-					className='range-input'
-					placeholder='YYYY-MM-DD'
-					value={firstDate}
-					onChange={this.handleFirstDateChange}
-				/>
+					<Input
+						className='range-input'
+						placeholder='YYYY-MM-DD'
+						value={firstDate}
+						onChange={this.handleFirstDateChange}
+						error={firstDateError}
+					/>
 				</div>
 			);
+			if (!firstDate.length) {
+				disableSearch = true;
+			}
+		}
+		if (firstDateError || secondDateError) {
+			disableSearch = true;
 		}
 		return (
 			<div className='formDiv'>
@@ -79,7 +93,6 @@ class SearchForm extends React.Component {
 							<div className='view-dropdown-container'>
 								<b>View:</b>
 								<Dropdown
-									placeholder='Select Range'
 									fluid
 									selection
 									options={ViewSelections}
@@ -118,53 +131,46 @@ class SearchForm extends React.Component {
 					primary
 					className='search-button'
 					onClick={this.handleSearch}
+					disabled={disableSearch}
 				> Search
 				</Button>
 			</div>
 		);
 	}
 
-	getModalContent = () => {
-		return (
-			<div>Hello world</div>
-		);
-	}
 	handleOpen = () => {
-		this.setState({modalOpen: true});
+		this.setState({ modalOpen: true });
 	}
 	handleClose = () => {
-		this.setState({modalOpen: false})
+		this.setState({ modalOpen: false })
 	}
 	handleSearch = () => {
-		appActions.handleSearch(this.state.search);
+		const { modalOpen, firstDateError, secondDateError, ...searchState } = this.state;
+		appActions.handleSearch(searchState);
 	}
-	handleFirstDateChange = (event, data) => {
+	handleFirstDateChange = (_event, data) => {
+		const firstDateError = AppUtils.testDateString(data.value);
 		this.setState({
-			search:
-			{
-				firstDate: data.value
-			}
+			firstDate: data.value,
+			firstDateError,
 		});
 	}
-	handleSecondDateChange = (event, data) => {
+	handleSecondDateChange = (_event, data) => {
+		const secondDateError = AppUtils.testDateString(data.value);
 		this.setState({
-			search:
-			{
-				secondDate: data.value
-			}
+			secondDate: data.value,
+			secondDateError,
 		});
+
 	}
-	handleViewChange = (event, data) => {
-		appActions.handleSearch(Object.assign(this.state.search, {view: data.value}));
+	handleViewChange = (_event, data) => {
+		const { modalOpen, firstDateError, secondDateError, ...searchState } = this.state;
+		appActions.handleSearch(Object.assign(searchState, {view: data.value}));
 		this.setState({view: data.value});
 	}
-	handleRangeChange = (event, data) => {
-		this.setState({
-			search:
-			{
-				range: data.value
-			}
-		});
+	handleRangeChange = (_event, data) => {
+		this.setState({ range: data.value });
+
 	}
 }
 

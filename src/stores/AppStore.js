@@ -36,6 +36,11 @@ class AppStore extends EventEmitter{
 		this.emitChange();
 	}
 
+	handleDelete = (task) => {
+		this.state.results = this.state.results.filter(t => t.id !== task.id);
+		this.emitChange();
+	}
+
 }
 const appStore = new AppStore();
 export default appStore;

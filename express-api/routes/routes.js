@@ -3,13 +3,13 @@ const has = require('lodash/has');
 const isEmpty = require('lodash/isEmpty');
 
 const router = app => {
-	app.use(function(req, res, next) {
+	app.use(function(_req, res, next) {
 		res.header('Access-Control-Allow-Origin', '*');
     	res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization, Content-Length, X-Requested-With');
 		res.header('Access-Control-Allow-Methods', 'PUT, POST, GET, DELETE, OPTIONS');
 		next();
 	});
-	app.get('/', (request, response) => {
+	app.get('/', (_request, response) => {
 		response.send({
 			message: 'Node.js and Express REST API'
 		});
@@ -79,11 +79,11 @@ const router = app => {
 		}
 		response.status(400).send(`Specify completed field`);
 	});
-	app.delete('/tasks/:id', (request, response) => {
+	app.delete('/task/:id', (request, response) => {
 		const id = request.params.id;
-		pool.query('DELETE FROM tasks WHERE id = ?', id, (error, result) => {
+		pool.query('DELETE FROM tasks WHERE id = ?', id, (error, _result) => {
 			if (error) throw error;
-			response.send('Task deleted');
+			response.send({message: `Task with ID: ${id} deleted successfully`, status: 200});
 		});
 	});
 }

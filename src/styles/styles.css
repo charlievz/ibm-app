@@ -85,3 +85,7 @@ p {
 	margin: 0 !important;
 	height: 60px !important;
 }
+
+.remove-button {
+	float: left;
+}

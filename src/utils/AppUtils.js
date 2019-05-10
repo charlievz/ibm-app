@@ -19,8 +19,11 @@ const AppUtils = {
     	var s = num+"";
     	while (s.length < size) s = "0" + s;
     	return s;
-    }
-
+	},
+	testDateString: (string) => {
+		const re = /^\d{4}-\d{2}-\d{2}$/;
+		return !re.test(string);
+	},
 }
 
 export default AppUtils;

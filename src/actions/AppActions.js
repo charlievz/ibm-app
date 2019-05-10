@@ -19,14 +19,14 @@ const AppActions = {
 		if (view === 'completed') {
 			url += (paramsAdded ? "&" : "") + "completed=true";
 		}
+		console.log(url);
 		fetch(url).then(response=>{
 			return response.json();
 		}).then(json=> {
 			const results = AppUtils.processSearchResponse(json);
 			appStore.handleResponse(results); // despite my efforts to resolve issue, the flux dispatcher wasn't working for me
-			console.log(results);
 		}).catch(error => {
-			console.log(error);
+			console.error(error);
 		});
 	},
 	createTask(taskState) {
@@ -45,7 +45,7 @@ const AppActions = {
 				appStore.handleTaskAdded(Object.assign({}, taskState, {id: json.id}));
 			}
 		}).catch(error=> {
-			console.log(error);
+			console.error(error);
 		});
 	},
 	markComplete(task) {
@@ -72,9 +72,24 @@ const AppActions = {
 				appStore.handleMarkComplete(task, dateString);
 			}
 		}).catch(error=> {
-			console.log(error);
+			console.error(error);
 		});
-	}
+	},
+	removeTask(task) {
+		let url = `${SERVICE_URL}/task/${task.id}`;
+		const param = {
+			method: "DELETE",
+		};
+		fetch(url, param).then(response => {
+			return response.json();
+		}).then(json => {
+			if (json.status === 200) {
+				appStore.handleDelete(task);
+			}
+		}).catch(error=> {
+			console.error(error);
+		});
+	},
 
 };
 

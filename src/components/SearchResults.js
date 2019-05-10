@@ -24,7 +24,7 @@ class SearchResults extends React.Component {
 		if (!results.length) {
 			return (
 				<div className='label'>
-					Press the search button
+					Load Tasks by Clicking the Search Button
 				</div>
 			);
 		}
@@ -75,8 +75,12 @@ class SearchResults extends React.Component {
 	}
 
 	getModalContent = (result) => {
-		let completed = {key: 'completed', content: 'Completed', disabled: true};
+		let completed = {key: 'completed', content: 'Completed', disabled: true };
 		let done = { key: 'done', content: 'Done', color: 'blue' };
+		let remove = { className: 'remove-button', key: 'remove', content: 'Remove', color: 'red' }
+		remove.onClick = () => {
+			appActions.removeTask(result);
+		}
 		if (!result.completedOn) {
 			completed.content = 'Mark as completed';
 			completed.disabled = false;
@@ -85,7 +89,7 @@ class SearchResults extends React.Component {
 				appActions.markComplete(result);
 			}
 		}
-		return [ completed, done ];
+		return [ remove, completed, done ];
 	}
 
 	onChange = () => {
