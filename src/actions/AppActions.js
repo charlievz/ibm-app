@@ -1,36 +1,40 @@
 import AppUtils from '../utils/AppUtils';
 import appStore from '../stores/AppStore';
 import { SERVICE_URL } from '../constants/AppConstants';
+
 const AppActions = {
+
 	handleSearch(searchState) {
 		const {range, view, firstDate, secondDate} = searchState;
-		let paramsAdded = false;
-		let url = `${SERVICE_URL}/tasks?`;
+		const url = `${SERVICE_URL}/tasks`;
+		const bodyParams = {};
 		if (range === 'on') {
-			let epoch = new Date(firstDate).getTime() / 1000;
-			url += "firstDate="+epoch;
-			paramsAdded = true;
+			bodyParams.firstDate = AppUtils.epochSecondsForDateString(firstDate);
 		} else if (range === 'between') {
-			let epochFirstDate = new Date(firstDate).getTime() / 1000;
-			let epochSecondDate = new Date(secondDate).getTime() / 1000;
-			url += "firstDate=" + epochFirstDate + "&secondDate=" + epochSecondDate;
-			paramsAdded = true;
+			bodyParams.firstDate = AppUtils.epochSecondsForDateString(firstDate);
+			bodyParams.secondDate = AppUtils.epochSecondsForDateString(secondDate);
 		}
 		if (view === 'completed') {
-			url += (paramsAdded ? "&" : "") + "completed=true";
+			bodyParams.completedOn = true;
 		}
-		console.log(url);
-		fetch(url).then(response=>{
+		const param = {
+			body: JSON.stringify(bodyParams),
+			headers: {
+				'Content-Type': 'application/json',
+			},
+			method: "POST",
+		};
+		fetch(url, param).then(response => {
 			return response.json();
-		}).then(json=> {
+		}).then(json => {
 			const results = AppUtils.processSearchResponse(json);
-			appStore.handleResponse(results); // despite my efforts to resolve issue, the flux dispatcher wasn't working for me
+			appStore.handleResponse(results);
 		}).catch(error => {
 			console.error(error);
 		});
 	},
 	createTask(taskState) {
-		let url = `${SERVICE_URL}/task`;
+		const url = `${SERVICE_URL}/task`;
 		const param = {
 			body: JSON.stringify(taskState),
 			headers: {
@@ -51,9 +55,9 @@ const AppActions = {
 	markComplete(task) {
 		const currentEpochSeconds = (new Date()).getTime() / 1000;
 		const dateString = AppUtils.toDateString(currentEpochSeconds);
-		const formattedEpochSeconds = new Date(dateString).getTime() / 1000;
+		const formattedEpochSeconds = AppUtils.epochSecondsForDateString(dateString);
 
-		let url = `${SERVICE_URL}/task/${task.id}`;
+		const url = `${SERVICE_URL}/task/${task.id}`;
 
 		const data = {
 			completedOn: formattedEpochSeconds,
@@ -76,7 +80,7 @@ const AppActions = {
 		});
 	},
 	removeTask(task) {
-		let url = `${SERVICE_URL}/task/${task.id}`;
+		const url = `${SERVICE_URL}/task/${task.id}`;
 		const param = {
 			method: "DELETE",
 		};

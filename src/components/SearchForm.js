@@ -12,16 +12,18 @@ class SearchForm extends React.Component {
 			range: '',
 			view: 'all',
 			firstDate: '',
-			firstDateError: false,
 			secondDate: '',
+			firstDateError: false,
 			secondDateError: false,
 			modalOpen: false,
 		};
 	}
+
 	componentDidMount() {
 		const { modalOpen, firstDateError, secondDateError, ...searchState } = this.state;
 		appActions.handleSearch(searchState);
 	}
+
 	render() {
 		const { range, view, firstDate, secondDate, modalOpen, firstDateError, secondDateError } = this.state;
 		let inputs;
@@ -141,13 +143,16 @@ class SearchForm extends React.Component {
 	handleOpen = () => {
 		this.setState({ modalOpen: true });
 	}
+
 	handleClose = () => {
 		this.setState({ modalOpen: false })
 	}
+
 	handleSearch = () => {
 		const { modalOpen, firstDateError, secondDateError, ...searchState } = this.state;
 		appActions.handleSearch(searchState);
 	}
+
 	handleFirstDateChange = (_event, data) => {
 		const firstDateError = AppUtils.testDateString(data.value);
 		this.setState({
@@ -155,6 +160,7 @@ class SearchForm extends React.Component {
 			firstDateError,
 		});
 	}
+
 	handleSecondDateChange = (_event, data) => {
 		const secondDateError = AppUtils.testDateString(data.value);
 		this.setState({
@@ -163,14 +169,15 @@ class SearchForm extends React.Component {
 		});
 
 	}
+
 	handleViewChange = (_event, data) => {
 		const { modalOpen, firstDateError, secondDateError, ...searchState } = this.state;
 		appActions.handleSearch(Object.assign(searchState, {view: data.value}));
 		this.setState({view: data.value});
 	}
+
 	handleRangeChange = (_event, data) => {
 		this.setState({ range: data.value });
-
 	}
 }
 

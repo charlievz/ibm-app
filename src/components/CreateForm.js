@@ -1,6 +1,7 @@
 import React from 'react';
 import {Input, Button, Form, TextArea } from 'semantic-ui-react'
 import AppActions from '../actions/AppActions';
+import AppUtils from '../utils/AppUtils';
 
 class CreateForm extends React.Component {
 
@@ -10,11 +11,12 @@ class CreateForm extends React.Component {
             name: '',
             description: '',
             dueOn: '',
+            dueOnError: false,
 		};
     }
 
     render() {
-        const {name, description, dueOn} = this.state;
+        const {name, description, dueOn, dueOnError} = this.state;
         return (
             <div>
                 <Form>
@@ -31,6 +33,7 @@ class CreateForm extends React.Component {
                             label='Due on:*'
                             placeholder='YYYY-MM-DD'
                             value={dueOn}
+                            error={dueOnError}
                             onChange={this.handleDueOnChange}
                         />
                     </Form.Group>
@@ -44,7 +47,7 @@ class CreateForm extends React.Component {
                     <Form.Field
                         control={Button}
                         primary
-                        disabled={name.length <= 0 || dueOn.length <= 0 || description.length <= 0}
+                        disabled={name.length <= 0 || dueOn.length <= 0 || description.length <= 0 || dueOnError}
                         onClick={this.handleCreateClick}
                         content='Create'
                     />
@@ -52,18 +55,27 @@ class CreateForm extends React.Component {
             </div>
         );
     }
+
     handleCreateClick = () => {
-        AppActions.createTask(this.state);
+        const { dueOnError, ...state } = this.state;
+        AppActions.createTask(state);
         this.props.closeForm();
     }
+
     handleNameChange = (e, data) => {
-        this.setState({name: data.value});
+        this.setState({ name: data.value });
     }
+
     handleDueOnChange = (e, data) => {
-        this.setState({dueOn: data.value});
+        const dueOnError = AppUtils.testDateString(data.value);
+        this.setState({
+            dueOn: data.value,
+            dueOnError,
+        });
     }
+
     handleDescriptionChange = (e, data) => {
-        this.setState({description: data.value});
+        this.setState({ description: data.value });
     }
 }
 

@@ -1,52 +1,40 @@
 .logo {
-	width: 100px !important;
-	height: 45px !important;
+	width: 120px !important;
+	height: 55px !important;
 }
 
 .header {
-	height: 55px !important;
-	width: 100% !important;
-	padding: 0px !important;
-	margin: 0px !important;
+	height: 65px;
+	width: 100%;
+	padding: 0px;
+	margin: 0px;
 }
 
-/* .app {
-	width: 100% !important;
-	height: 100% !important;
-} */
-
 .formDiv, .resultsContainer {
-	margin-left: 200px !important;
-	margin-right: 200px !important;
-	margin-top: 20px !important;
+	margin-left: 200px;
+	margin-right: 200px;
+	margin-top: 20px;
 }
 
 p {
-	margin-bottom: 0px !important;
+	margin-bottom: 0px;
 }
 
 .other-column {
-	text-align: center !important;
+	text-align: center;
 }
 
 .searchResult {
-	margin-bottom: 20px !important;
+	margin-bottom: 20px;
 }
 
 .lowered-text, .description {
 	margin-top: 10px;
 }
 
-.description {
-	white-space: nowrap;
-	text-overflow: ellipsis;
-	overflow: hidden;
-}
-
 .label {
-	text-align: center !important;
-	margin-top: 10px !important;
-	margin-bottom: 10px !important;
+	text-align: center;
+	margin-bottom: 20px !important;
 }
 
 .view-range-container, .view-dropdown-container {
@@ -77,13 +65,13 @@ p {
 }
 
 .result :hover {
-	background-color: #ededed !important;
+	background-color: #ededed;
 }
 
 .modal-header {
-	display: flex !important;
+	display: flex;
 	margin: 0 !important;
-	height: 60px !important;
+	height: 60px;
 }
 
 .remove-button {

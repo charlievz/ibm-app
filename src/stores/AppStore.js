@@ -1,5 +1,5 @@
 import { EventEmitter } from 'events';
-import _ from 'lodash';
+import find from 'lodash/find';
 
 class AppStore extends EventEmitter{
 	constructor() {
@@ -12,22 +12,26 @@ class AppStore extends EventEmitter{
 	get results() {
 		return this.state.results;
 	}
+
 	emitChange() {
 		this.emit("CHANGE_EVENT");
 	}
+
 	addChangeListener(callback) {
 		this.on("CHANGE_EVENT", callback);
 	}
+
 	removeChangeListener(callback) {
 		this.removeListener("CHANGE_EVENT", callback);
 	}
+
 	handleResponse = response => {
 		this.state.results = response;
 		this.emitChange();
 	}
 
 	handleMarkComplete = (task, formattedEpochSeconds) => {
-		_.find(this.state.results, {id: task.id}).completedOn = formattedEpochSeconds;
+		find(this.state.results, {id: task.id}).completedOn = formattedEpochSeconds;
 		this.emitChange();
 	}
 

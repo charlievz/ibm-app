@@ -14,8 +14,8 @@ const router = app => {
 			message: 'Node.js and Express REST API'
 		});
 	});
-	app.get('/tasks', (request, response) => {
-		if (isEmpty(request.query)) {
+	app.post('/tasks', (request, response) => {
+		if (isEmpty(request.body)) {
 			pool.query('SELECT * FROM tasks', (error, result) => {
 				if (error) throw error;
 				response.status(200).send(result);
@@ -26,17 +26,18 @@ const router = app => {
 		let query = "SELECT * FROM tasks"
 		let addedWhere = false;
 
-		if (has(request.query, 'firstDate')) {
-			if (!has(request.query, 'secondDate')) {
-				query += " WHERE due_on = " + request.query.firstDate;
+		if (has(request.body, 'firstDate')) {
+			if (!has(request.body, 'secondDate')) {
+				query += " WHERE due_on = " + request.body.firstDate;
 			} else {
-				query += " WHERE due_on >= " + request.query.firstDate + " AND due_on <= " + request.query.secondDate;
+				query += " WHERE due_on >= " + request.body.firstDate + " AND due_on <= " + request.body.secondDate;
 			}
 			addedWhere = true;
 		}
-		if (has(request.query, 'completed') && request.query.completed != 'false') {
+		if (has(request.body, 'completedOn') && request.body.completedOn == true) {
 			query += (addedWhere ? " AND " : " WHERE ") + "completed_on IS NOT NULL";
 		}
+
 		pool.query(query, (error, result) => {
 			if (error) throw error;
 			response.status(200).send(result);
